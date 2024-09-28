@@ -1,8 +1,16 @@
-import React, { Suspense, useEffect, useMemo, useState } from "react";
+import React, { useEffect, useMemo, useRef, useState } from "react";
 
 import "./styles.css";
 import Grid from "@mui/material/Grid2";
-import { Button, CircularProgress, TextField, Typography } from "@mui/material";
+import {
+  Box,
+  Button,
+  CircularProgress,
+  TextField,
+  Typography,
+} from "@mui/material";
+import CheckIcon from "@mui/icons-material/Check";
+import CloseIcon from "@mui/icons-material/Close";
 
 type Char =
   | "a"
@@ -135,12 +143,14 @@ export default function Paardensprong() {
     string[] | null
   >(null);
   const [puzzle, setPuzzle] = useState<IPaardenSprongPuzzle | null>(null);
+  const [isAnswerCorrect, setIsAnswerCorrect] = useState<boolean | null>(null);
+  const answerTextFieldRef = useRef<any>();
 
   useEffect(() => {
     const loadDatabaseAsync = async () => {
       const fileContents = await fetch("achtletterwoorden.csv");
       const words = await fileContents.text();
-      const listOfWords = words.split("\r");
+      const listOfWords = words.split("\r\n");
       setEightLetterWordDatabase(listOfWords);
     };
 
@@ -167,7 +177,20 @@ export default function Paardensprong() {
       randomWord,
       randomStartPosition
     );
+
+    if (answerTextFieldRef.current) {
+      answerTextFieldRef.current.value = "";
+    }
+    setIsAnswerCorrect(null);
     setPuzzle(newPuzzle);
+  };
+
+  const checkAnswer = () => {
+    if (answerTextFieldRef && answerTextFieldRef.current && puzzle) {
+      setIsAnswerCorrect(answerTextFieldRef.current.value === puzzle.word);
+    } else {
+      setIsAnswerCorrect(null);
+    }
   };
 
   return (
@@ -198,9 +221,39 @@ export default function Paardensprong() {
       </Grid>
 
       <Grid>
-        <Grid container direction="row" spacing={1}>
-          <TextField id="outlined-basic" label="Antwoord" variant="outlined" />
-          <Button variant="contained">Check</Button>
+        <Grid container direction="row" alignItems="center" spacing={1}>
+          <TextField
+            label="Antwoord"
+            variant="outlined"
+            inputRef={answerTextFieldRef}
+          />
+          <Button onClick={() => checkAnswer()} variant="contained">
+            Check
+          </Button>
+          {isAnswerCorrect === null ? (
+            <Box
+              sx={{
+                width: "32px",
+                height: "32px",
+              }}
+            ></Box>
+          ) : isAnswerCorrect ? (
+            <CheckIcon
+              sx={{
+                width: "32px",
+                height: "32px",
+                color: "green",
+              }}
+            />
+          ) : (
+            <CloseIcon
+              sx={{
+                width: "32px",
+                height: "32px",
+                color: "red",
+              }}
+            />
+          )}
         </Grid>
       </Grid>
     </Grid>
