@@ -145,6 +145,7 @@ export default function Paardensprong() {
   const [puzzle, setPuzzle] = useState<IPaardenSprongPuzzle | null>(null);
   const [isAnswerCorrect, setIsAnswerCorrect] = useState<boolean | null>(null);
   const answerTextFieldRef = useRef<any>();
+  const [timerTimeSeconds, setTimerSeconds] = useState<number>(0);
 
   useEffect(() => {
     const loadDatabaseAsync = async () => {
@@ -160,6 +161,21 @@ export default function Paardensprong() {
   useEffect(() => {
     generateNewWord(eightLetterWordDatabase);
   }, [eightLetterWordDatabase]);
+
+  useEffect(() => {
+    const timerInterval = setInterval(() => {
+      setTimerSeconds((prevTime: number) => {
+        return prevTime + 1;
+      });
+    }, 1000);
+
+    if (isAnswerCorrect) {
+      clearInterval(timerInterval);
+    }
+
+    // Cleanup the interval when the component unmounts
+    return () => clearInterval(timerInterval);
+  }, [isAnswerCorrect]);
 
   const generateNewWord = (listOfWords: string[] | null) => {
     if (!listOfWords || listOfWords.length === 0) {
@@ -181,8 +197,10 @@ export default function Paardensprong() {
     if (answerTextFieldRef.current) {
       answerTextFieldRef.current.value = "";
     }
+
     setIsAnswerCorrect(null);
     setPuzzle(newPuzzle);
+    setTimerSeconds(0);
   };
 
   const checkAnswer = () => {
@@ -211,6 +229,22 @@ export default function Paardensprong() {
         >
           Nieuwe Paardensprong
         </Button>
+      </Grid>
+
+      <Grid>
+        <Grid container direction="row" alignItems="center" spacing={1}>
+          <Typography
+            variant="h5"
+            sx={{
+              fontWeight: "bold",
+            }}
+          >
+            Time:
+          </Typography>
+          <Typography variant="h5">{`${Math.floor(timerTimeSeconds / 60)}:${
+            timerTimeSeconds % 60 < 10 ? "0" : ""
+          }${timerTimeSeconds % 60}`}</Typography>
+        </Grid>
       </Grid>
       <Grid>
         {puzzle ? (
