@@ -12,41 +12,7 @@ import {
 import CheckIcon from "@mui/icons-material/Check";
 import CloseIcon from "@mui/icons-material/Close";
 
-type Char =
-  | "a"
-  | "b"
-  | "c"
-  | "d"
-  | "e"
-  | "f"
-  | "g"
-  | "h"
-  | "i"
-  | "j"
-  | "k"
-  | "l"
-  | "m"
-  | "n"
-  | "o"
-  | "p"
-  | "q"
-  | "r"
-  | "s"
-  | "t"
-  | "u"
-  | "v"
-  | "w"
-  | "x"
-  | "y"
-  | "z"
-  | "?";
-
-function toChar(letter: string): Char {
-  if (letter.length === 1) {
-    return letter as Char;
-  }
-  return "?";
-}
+import { Char, toChar } from "../common/Character";
 
 interface IPaardensprongTableProps {
   achtLetterWoord: Array<Char>;
@@ -71,7 +37,7 @@ function PaardensprongTable(props: IPaardensprongTableProps) {
           <td className="square">
             <Typography variant="h3">{props.achtLetterWoord[3]}</Typography>
           </td>
-          <td className="square center-piece"></td>
+          <td className="square center-piece" />
           <td className="square">
             <Typography variant="h3">{props.achtLetterWoord[4]}</Typography>
           </td>

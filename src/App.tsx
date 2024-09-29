@@ -8,9 +8,15 @@ import Paardensprong from "./Components/Paardensprong";
 import Taartpunt from "./Components/Taartpunt";
 import TwaalfLetterWoord from "./Components/TwaalfLetterWoord";
 import Home from "./Components/Home";
+import { nanoid } from "nanoid";
 
 const title = "2 voor 12 Oefeningen";
 const menuItems: IMenuItem[] = [
+  {
+    navigation: "/twaalf-letter-woord",
+    title: "12-letterwoord",
+    component: <TwaalfLetterWoord />,
+  },
   {
     navigation: "/paardensprong",
     title: "Paardensprong",
@@ -20,11 +26,6 @@ const menuItems: IMenuItem[] = [
     navigation: "/taartpunt",
     title: "Taartpunt",
     component: <Taartpunt />,
-  },
-  {
-    navigation: "/twaalf-letter-woord",
-    title: "12-letterwoord",
-    component: <TwaalfLetterWoord />,
   },
 ];
 
@@ -38,7 +39,13 @@ function App() {
         <Routes>
           <Route path="/" element={<Home />} />
           {menuItems.map((item: IMenuItem) => {
-            return <Route path={item.navigation} element={item.component} />;
+            return (
+              <Route
+                key={nanoid()}
+                path={item.navigation}
+                element={item.component}
+              />
+            );
           })}
         </Routes>
       </ThemeProvider>

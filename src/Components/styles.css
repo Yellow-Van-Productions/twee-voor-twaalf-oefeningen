@@ -14,3 +14,27 @@
     background: #1976d2;
   }
 }
+
+.tile {
+  width: 70px;
+  height: 90px;
+
+  padding: 4px;
+}
+
+.tile-content {
+  width: 60px;
+  height: 80px;
+  
+  border: 3px solid rgb(37, 16, 1);
+  box-sizing: border-box;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  border-radius: 3px;
+  margin: 4px;
+
+  &.active {
+    cursor: pointer;
+  }
+}
