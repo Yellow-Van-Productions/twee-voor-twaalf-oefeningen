@@ -8,7 +8,8 @@ import Paardensprong from "./Components/Paardensprong";
 import Taartpunt from "./Components/Taartpunt";
 import TwaalfLetterWoord from "./Components/TwaalfLetterWoord";
 import Home from "./Components/Home";
-import { nanoid } from "nanoid";
+
+import { v4 as uuidv4 } from "uuid";
 
 const title = "2 voor 12 Oefenen";
 const menuItems: IMenuItem[] = [
@@ -41,7 +42,7 @@ function App() {
           {menuItems.map((item: IMenuItem) => {
             return (
               <Route
-                key={nanoid()}
+                key={uuidv4()}
                 path={item.navigation}
                 element={item.component}
               />

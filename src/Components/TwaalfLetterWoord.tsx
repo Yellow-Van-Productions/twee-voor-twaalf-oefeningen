@@ -13,12 +13,12 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
+import { v4 as uuidv4 } from "uuid";
 
 import CheckIcon from "@mui/icons-material/Check";
 import CloseIcon from "@mui/icons-material/Close";
 
 import { Char, toChar } from "../common/Character";
-import { nanoid } from "nanoid";
 
 const N_LETTERS = 12;
 
@@ -119,7 +119,7 @@ function TwaalfLetterWoordPuzzle(props: ITwaalfLetterWoordPuzzleProps) {
                   return (
                     <TableCell
                       className="tile"
-                      key={nanoid()}
+                      key={uuidv4()}
                       sx={{
                         borderBottom: "0px",
                         padding: "2px",
@@ -166,7 +166,7 @@ function TwaalfLetterWoordPuzzle(props: ITwaalfLetterWoordPuzzleProps) {
               {currentGameState.map((letter: RaadLetter) => {
                 return (
                   <TableCell
-                    key={nanoid()}
+                    key={uuidv4()}
                     className="tile"
                     sx={{
                       borderBottom: "0px",
