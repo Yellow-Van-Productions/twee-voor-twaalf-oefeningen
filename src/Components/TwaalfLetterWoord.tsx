@@ -2,6 +2,7 @@ import React, { useEffect, useMemo, useRef, useState } from "react";
 
 import Grid from "@mui/material/Grid2";
 import {
+  Autocomplete,
   Box,
   Button,
   CircularProgress,
@@ -20,10 +21,13 @@ import CloseIcon from "@mui/icons-material/Close";
 import { Char, toChar } from "../common/Character";
 import { nanoid } from "nanoid";
 
+const N_LETTERS = 12;
+
 interface RaadLetter {
   letter: Char;
   riddleIndex: number;
   finalWordIndex: number;
+  hidden: boolean;
   checked: boolean;
 }
 
@@ -35,9 +39,10 @@ interface ITwaalfLetterWoordPuzzle {
 
 interface ITwaalfLetterWoordPuzzleProps {
   puzzle: ITwaalfLetterWoordPuzzle;
+  onBuyingLetter: () => void;
 }
 
-function randomShuffle(array: number[]) {
+function randomShuffle(array: any[]) {
   let currentIndex = array.length;
 
   while (currentIndex != 0) {
@@ -50,18 +55,30 @@ function randomShuffle(array: number[]) {
   }
 }
 
-function newRandomTwaalfLetterPuzzle(word: string): ITwaalfLetterWoordPuzzle {
-  const randomlyShuffledArray = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11];
-  randomShuffle(randomlyShuffledArray);
+function newRandomTwaalfLetterPuzzle(
+  word: string,
+  bekendeLetters: number
+): ITwaalfLetterWoordPuzzle {
+  // Array: [0, 1, 2, 3, ...]
+  const randomlyShuffledLetterArray = Array.from(Array(N_LETTERS).keys());
+  randomShuffle(randomlyShuffledLetterArray);
+
+  // Randomly hide some letters
+  const randomlyShuffledBooleanArray = Array<boolean>(N_LETTERS);
+  for (let index = 0; index < N_LETTERS - bekendeLetters; index++) {
+    randomlyShuffledBooleanArray[index] = true;
+  }
+  randomShuffle(randomlyShuffledBooleanArray);
 
   let count = 0;
-  const newArray = new Array<RaadLetter>(12);
+  const newArray = new Array<RaadLetter>(N_LETTERS);
   for (const letter of word) {
     newArray[count] = {
       letter: toChar(letter),
-      riddleIndex: randomlyShuffledArray[count],
+      riddleIndex: randomlyShuffledLetterArray[count],
       finalWordIndex: count,
       checked: false,
+      hidden: randomlyShuffledBooleanArray[count],
     };
     ++count;
   }
@@ -83,7 +100,7 @@ function TwaalfLetterWoordPuzzle(props: ITwaalfLetterWoordPuzzleProps) {
   return (
     <Grid
       container
-      spacing={3}
+      spacing={1}
       sx={{
         justifyContent: "center",
       }}
@@ -114,6 +131,9 @@ function TwaalfLetterWoordPuzzle(props: ITwaalfLetterWoordPuzzleProps) {
                       <button
                         className="tile-content active"
                         onClick={() => {
+                          if (letter.hidden || letter.checked) {
+                            return;
+                          }
                           setCurrentGameState(
                             currentGameState.map((oldLetter) => {
                               return oldLetter === letter
@@ -124,10 +144,11 @@ function TwaalfLetterWoordPuzzle(props: ITwaalfLetterWoordPuzzleProps) {
                                 : oldLetter;
                             })
                           );
+                          props.onBuyingLetter();
                         }}
                       >
                         <Typography variant="h3">
-                          {letter.checked ? "" : letter.letter}
+                          {letter.hidden || letter.checked ? "" : letter.letter}
                         </Typography>
                       </button>
                     </TableCell>
@@ -144,13 +165,14 @@ function TwaalfLetterWoordPuzzle(props: ITwaalfLetterWoordPuzzleProps) {
               {currentGameState.map((letter: RaadLetter) => {
                 return (
                   <TableCell
+                    key={nanoid()}
                     className="tile"
                     sx={{
                       borderBottom: "0px",
                       padding: "2px",
                     }}
                   >
-                    <button className="tile-content" key={nanoid()}>
+                    <button className="tile-content">
                       <Typography variant="h3">
                         {letter.checked ? letter.letter : "."}
                       </Typography>
@@ -167,13 +189,25 @@ function TwaalfLetterWoordPuzzle(props: ITwaalfLetterWoordPuzzleProps) {
 }
 
 export default function TwaalfLetterWoord() {
+  const PUZZLE_TIME_OUT = 120;
+  const LETTER_COST = 10;
+
   const [twelveLetterWordDatabase, setTwelveLetterWordDatabase] = useState<
     string[] | null
   >(null);
   const [puzzle, setPuzzle] = useState<ITwaalfLetterWoordPuzzle | null>(null);
   const [isAnswerCorrect, setIsAnswerCorrect] = useState<boolean | null>(null);
   const answerTextFieldRef = useRef<any>();
-  const [timerTimeSeconds, setTimerSeconds] = useState<number>(0);
+  const [gameTimeSeconds, setGameTimerSeconds] =
+    useState<number>(PUZZLE_TIME_OUT);
+  const [euroScore, setEuroScore] = useState<number>(500);
+  const [bekendeLetters, setBekendeLetters] = useState<number>(N_LETTERS);
+
+  const buyLetter = () => {
+    setEuroScore((previousScore: number) => {
+      return previousScore - LETTER_COST;
+    });
+  };
 
   useEffect(() => {
     const loadDatabaseAsync = async () => {
@@ -187,13 +221,19 @@ export default function TwaalfLetterWoord() {
   }, []);
 
   useEffect(() => {
-    generateNewPuzzle(twelveLetterWordDatabase);
-  }, [twelveLetterWordDatabase]);
+    generateNewPuzzle(twelveLetterWordDatabase, bekendeLetters);
+  }, [twelveLetterWordDatabase, bekendeLetters]);
 
   useEffect(() => {
-    const timerInterval = setInterval(() => {
-      setTimerSeconds((prevTime: number) => {
-        return prevTime + 1;
+    let timerInterval = setInterval(() => {
+      setGameTimerSeconds((previousTime: number) => {
+        if (previousTime === 0) {
+          clearInterval(timerInterval);
+          setIsAnswerCorrect(false);
+          return 0;
+        } else {
+          return previousTime - 1;
+        }
       });
     }, 1000);
 
@@ -205,7 +245,10 @@ export default function TwaalfLetterWoord() {
     return () => clearInterval(timerInterval);
   }, [isAnswerCorrect]);
 
-  const generateNewPuzzle = (listOfWords: string[] | null) => {
+  const generateNewPuzzle = (
+    listOfWords: string[] | null,
+    bekendeLetters: number
+  ) => {
     if (!listOfWords || listOfWords.length === 0) {
       return;
     }
@@ -213,7 +256,7 @@ export default function TwaalfLetterWoord() {
     const randomWord =
       listOfWords[Math.floor(Math.random() * listOfWords.length)];
 
-    const newPuzzle = newRandomTwaalfLetterPuzzle(randomWord);
+    const newPuzzle = newRandomTwaalfLetterPuzzle(randomWord, bekendeLetters);
 
     if (answerTextFieldRef.current) {
       answerTextFieldRef.current.value = "";
@@ -221,7 +264,7 @@ export default function TwaalfLetterWoord() {
 
     setIsAnswerCorrect(null);
     setPuzzle(newPuzzle);
-    setTimerSeconds(0);
+    setGameTimerSeconds(PUZZLE_TIME_OUT);
   };
 
   const checkAnswer = () => {
@@ -245,7 +288,7 @@ export default function TwaalfLetterWoord() {
         <Button
           variant="contained"
           onClick={() => {
-            generateNewPuzzle(twelveLetterWordDatabase);
+            generateNewPuzzle(twelveLetterWordDatabase, bekendeLetters);
           }}
         >
           Nieuw 12-letterwoord
@@ -260,16 +303,58 @@ export default function TwaalfLetterWoord() {
               fontWeight: "bold",
             }}
           >
-            Time:
+            Score:
           </Typography>
-          <Typography variant="h5">{`${Math.floor(timerTimeSeconds / 60)}:${
-            timerTimeSeconds % 60 < 10 ? "0" : ""
-          }${timerTimeSeconds % 60}`}</Typography>
+          <Typography variant="h5">{`€${euroScore}`}</Typography>
         </Grid>
       </Grid>
+
+      <Grid>
+        <Grid container direction="row" alignItems="center" spacing={1}>
+          <Typography
+            variant="h5"
+            sx={{
+              fontWeight: "bold",
+            }}
+          >
+            Time:
+          </Typography>
+          <Typography variant="h5">{`${Math.floor(gameTimeSeconds / 60)}:${
+            gameTimeSeconds % 60 < 10 ? "0" : ""
+          }${gameTimeSeconds % 60}`}</Typography>
+        </Grid>
+      </Grid>
+
+      <Grid>
+        <Grid container direction="row" alignItems="center" spacing={1}>
+          <Typography
+            variant="h5"
+            sx={{
+              fontWeight: "bold",
+            }}
+          >
+            Bekende letters:
+          </Typography>
+          <Autocomplete
+            disableClearable
+            value={bekendeLetters}
+            options={Array.from(Array(N_LETTERS + 1).keys())
+              .reverse()
+              .slice(0, 7)}
+            getOptionLabel={(option) => option.toString()}
+            renderInput={(params) => <TextField {...params} />}
+            onChange={(event, value) => {
+              if (value) {
+                setBekendeLetters(value);
+              }
+            }}
+          />
+        </Grid>
+      </Grid>
+
       <Grid>
         {puzzle ? (
-          <TwaalfLetterWoordPuzzle puzzle={puzzle} />
+          <TwaalfLetterWoordPuzzle puzzle={puzzle} onBuyingLetter={buyLetter} />
         ) : (
           <CircularProgress />
         )}

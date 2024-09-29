@@ -10,7 +10,7 @@ import TwaalfLetterWoord from "./Components/TwaalfLetterWoord";
 import Home from "./Components/Home";
 import { nanoid } from "nanoid";
 
-const title = "2 voor 12 Oefeningen";
+const title = "2 voor 12 Oefenen";
 const menuItems: IMenuItem[] = [
   {
     navigation: "/twaalf-letter-woord",
