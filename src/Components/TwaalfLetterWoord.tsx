@@ -98,15 +98,13 @@ function TwaalfLetterWoordPuzzle(props: ITwaalfLetterWoordPuzzleProps) {
   }, [props.puzzle]);
 
   return (
-    <Grid
-      container
-      spacing={1}
-      sx={{
-        justifyContent: "center",
-      }}
-    >
-      <Grid>
-        <Table>
+    <Grid container spacing={1}>
+      <Grid size={12}>
+        <Table
+          sx={{
+            width: "auto",
+          }}
+        >
           <TableBody>
             <TableRow>
               {currentGameState
@@ -158,8 +156,12 @@ function TwaalfLetterWoordPuzzle(props: ITwaalfLetterWoordPuzzleProps) {
           </TableBody>
         </Table>
       </Grid>
-      <Grid>
-        <Table>
+      <Grid size={12}>
+        <Table
+          sx={{
+            width: "auto",
+          }}
+        >
           <TableBody>
             <TableRow>
               {currentGameState.map((letter: RaadLetter) => {
@@ -191,6 +193,7 @@ function TwaalfLetterWoordPuzzle(props: ITwaalfLetterWoordPuzzleProps) {
 export default function TwaalfLetterWoord() {
   const PUZZLE_TIME_OUT = 120;
   const LETTER_COST = 10;
+  const START_EURO_SCORE = 500;
 
   const [twelveLetterWordDatabase, setTwelveLetterWordDatabase] = useState<
     string[] | null
@@ -200,7 +203,7 @@ export default function TwaalfLetterWoord() {
   const answerTextFieldRef = useRef<any>();
   const [gameTimeSeconds, setGameTimerSeconds] =
     useState<number>(PUZZLE_TIME_OUT);
-  const [euroScore, setEuroScore] = useState<number>(500);
+  const [euroScore, setEuroScore] = useState<number>(START_EURO_SCORE);
   const [bekendeLetters, setBekendeLetters] = useState<number>(N_LETTERS);
 
   const buyLetter = () => {
@@ -264,6 +267,7 @@ export default function TwaalfLetterWoord() {
 
     setIsAnswerCorrect(null);
     setPuzzle(newPuzzle);
+    setEuroScore(START_EURO_SCORE);
     setGameTimerSeconds(PUZZLE_TIME_OUT);
   };
 
@@ -284,7 +288,12 @@ export default function TwaalfLetterWoord() {
       justifyContent="center"
       margin={3}
     >
-      <Grid>
+      <Grid
+        size={12}
+        sx={{
+          textAlign: "center",
+        }}
+      >
         <Button
           variant="contained"
           onClick={() => {
@@ -295,7 +304,11 @@ export default function TwaalfLetterWoord() {
         </Button>
       </Grid>
 
-      <Grid>
+      <Grid
+        sx={{
+          textAlign: "center",
+        }}
+      >
         <Grid container direction="row" alignItems="center" spacing={1}>
           <Typography
             variant="h5"
@@ -309,7 +322,11 @@ export default function TwaalfLetterWoord() {
         </Grid>
       </Grid>
 
-      <Grid>
+      <Grid
+        sx={{
+          textAlign: "center",
+        }}
+      >
         <Grid container direction="row" alignItems="center" spacing={1}>
           <Typography
             variant="h5"
@@ -325,7 +342,11 @@ export default function TwaalfLetterWoord() {
         </Grid>
       </Grid>
 
-      <Grid>
+      <Grid
+        sx={{
+          textAlign: "center",
+        }}
+      >
         <Grid container direction="row" alignItems="center" spacing={1}>
           <Typography
             variant="h5"
@@ -352,7 +373,11 @@ export default function TwaalfLetterWoord() {
         </Grid>
       </Grid>
 
-      <Grid>
+      <Grid
+        sx={{
+          textAlign: "-webkit-center",
+        }}
+      >
         {puzzle ? (
           <TwaalfLetterWoordPuzzle puzzle={puzzle} onBuyingLetter={buyLetter} />
         ) : (
@@ -395,6 +420,12 @@ export default function TwaalfLetterWoord() {
             />
           )}
         </Grid>
+
+        {isAnswerCorrect === false ? (
+          <Typography>{puzzle?.word}</Typography>
+        ) : (
+          <></>
+        )}
       </Grid>
     </Grid>
   );
