@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 
 import Grid from "@mui/material/Grid2";
 import {
@@ -6,7 +6,6 @@ import {
   Box,
   Button,
   CircularProgress,
-  Container,
   Table,
   TableBody,
   TableCell,
@@ -45,7 +44,7 @@ interface ITwaalfLetterWoordPuzzleProps {
 function randomShuffle(array: any[]) {
   let currentIndex = array.length;
 
-  while (currentIndex != 0) {
+  while (currentIndex !== 0) {
     const randomIndex = Math.floor(Math.random() * currentIndex);
     currentIndex--;
     [array[currentIndex], array[randomIndex]] = [
