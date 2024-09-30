@@ -117,7 +117,9 @@ export default function Paardensprong() {
 
   useEffect(() => {
     const loadDatabaseAsync = async () => {
-      const fileContents = await fetch("achtletterwoorden.csv");
+      const fileContents = await fetch(
+        "/twee-voor-twaalf-oefeningen/achtletterwoorden.csv"
+      );
       const words = await fileContents.text();
       const listOfWords = words.split("\r\n");
 

@@ -1,5 +1,5 @@
 import React from "react";
-import { Route, Routes, BrowserRouter, Navigate } from "react-router-dom";
+import { Route, Routes, Navigate, HashRouter } from "react-router-dom";
 import { createTheme, CssBaseline, ThemeProvider } from "@mui/material";
 
 import { MenuBar, IMenuItem } from "./AppMenuBar";
@@ -7,24 +7,23 @@ import { MenuBar, IMenuItem } from "./AppMenuBar";
 import Paardensprong from "./Components/Paardensprong";
 import Taartpunt from "./Components/Taartpunt";
 import TwaalfLetterWoord from "./Components/TwaalfLetterWoord";
-import Home from "./Components/Home";
 
 import { v4 as uuidv4 } from "uuid";
 
 const title = "2 voor 12 Oefenen";
 const menuItems: IMenuItem[] = [
   {
-    navigation: "/",
+    navigation: "",
     title: "12-letterwoord",
     component: <Navigate to="/" />,
   },
   {
-    navigation: "/paardensprong",
+    navigation: "paardensprong",
     title: "Paardensprong",
     component: <Paardensprong />,
   },
   {
-    navigation: "/taartpunt",
+    navigation: "taartpunt",
     title: "Taartpunt",
     component: <Taartpunt />,
   },
@@ -33,12 +32,12 @@ const menuItems: IMenuItem[] = [
 function App() {
   const theme = createTheme();
   return (
-    <BrowserRouter>
+    <HashRouter>
       <ThemeProvider theme={theme}>
         <CssBaseline />
         <MenuBar title={title} menuItems={menuItems} />
         <Routes>
-          <Route path={"/"} element={<TwaalfLetterWoord />} />
+          <Route path={""} element={<TwaalfLetterWoord />} />
           {menuItems.map((item: IMenuItem) => {
             return (
               <Route
@@ -50,7 +49,7 @@ function App() {
           })}
         </Routes>
       </ThemeProvider>
-    </BrowserRouter>
+    </HashRouter>
   );
 }
 export default App;

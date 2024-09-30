@@ -213,7 +213,9 @@ export default function TwaalfLetterWoord() {
 
   useEffect(() => {
     const loadDatabaseAsync = async () => {
-      const fileContents = await fetch("twaalfletterwoorden.csv");
+      const fileContents = await fetch(
+        "/twee-voor-twaalf-oefeningen/twaalfletterwoorden.csv"
+      );
       const words = await fileContents.text();
       const listOfWords = words.split("\r\n");
 
