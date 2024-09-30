@@ -1,0 +1,15 @@
+{
+  "files": {
+    "main.css": "/twee-voor-twaalf-oefeningen/static/css/main.5d18d417.css",
+    "main.js": "/twee-voor-twaalf-oefeningen/static/js/main.3c586a5c.js",
+    "static/js/453.cee373e1.chunk.js": "/twee-voor-twaalf-oefeningen/static/js/453.cee373e1.chunk.js",
+    "index.html": "/twee-voor-twaalf-oefeningen/index.html",
+    "main.5d18d417.css.map": "/twee-voor-twaalf-oefeningen/static/css/main.5d18d417.css.map",
+    "main.3c586a5c.js.map": "/twee-voor-twaalf-oefeningen/static/js/main.3c586a5c.js.map",
+    "453.cee373e1.chunk.js.map": "/twee-voor-twaalf-oefeningen/static/js/453.cee373e1.chunk.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.5d18d417.css",
+    "static/js/main.3c586a5c.js"
+  ]
+}
