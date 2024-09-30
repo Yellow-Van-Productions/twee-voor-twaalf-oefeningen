@@ -117,9 +117,7 @@ export default function Paardensprong() {
 
   useEffect(() => {
     const loadDatabaseAsync = async () => {
-      const fileContents = await fetch(
-        "/twee-voor-twaalf-oefeningen/achtletterwoorden.csv"
-      );
+      const fileContents = await fetch("achtletterwoorden.csv");
       const words = await fileContents.text();
       const listOfWords = words.split("\r\n");
 
@@ -183,7 +181,10 @@ export default function Paardensprong() {
 
   const checkAnswer = () => {
     if (answerTextFieldRef && answerTextFieldRef.current && puzzle) {
-      setIsAnswerCorrect(answerTextFieldRef.current.value === puzzle.word);
+      setIsAnswerCorrect(
+        answerTextFieldRef.current.value.toLowerCase().trim() ===
+          puzzle.word.toLowerCase().trim()
+      );
     } else {
       setIsAnswerCorrect(null);
     }
