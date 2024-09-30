@@ -14,6 +14,8 @@ import CloseIcon from "@mui/icons-material/Close";
 
 import { Char, toChar } from "../common/Character";
 
+const N_LETTERS = 8;
+
 interface IPaardensprongTableProps {
   achtLetterWoord: Array<Char>;
 }
@@ -79,19 +81,19 @@ function scrambleWord(
 ): IPaardenSprongPuzzle {
   const CLOCK_WISE_PAARDENSPRONG = [0, 4, 5, 1, 7, 3, 2, 6];
 
-  const scrambledWordArray = new Array<Char>(8);
+  const scrambledWordArray = new Array<Char>(N_LETTERS);
   let index = CLOCK_WISE_PAARDENSPRONG.indexOf(startPosition);
   for (const letter of word) {
     scrambledWordArray[CLOCK_WISE_PAARDENSPRONG[index]] = toChar(letter);
     if (direction === Direction.ClockWise) {
       index++;
-      if (index > 7) {
-        index -= 8;
+      if (index > N_LETTERS - 1) {
+        index -= N_LETTERS;
       }
     } else {
       index--;
       if (index < 0) {
-        index += 8;
+        index += N_LETTERS;
       }
     }
   }
@@ -118,6 +120,14 @@ export default function Paardensprong() {
       const fileContents = await fetch("achtletterwoorden.csv");
       const words = await fileContents.text();
       const listOfWords = words.split("\r\n");
+
+      for (const word of listOfWords) {
+        if (word.length !== N_LETTERS) {
+          console.log("Error, word of incorrect length: " + word);
+          return;
+        }
+      }
+
       setEightLetterWordDatabase(listOfWords);
     };
 
@@ -152,7 +162,7 @@ export default function Paardensprong() {
       listOfWords[Math.floor(Math.random() * listOfWords.length)];
     const randomDirection =
       Math.random() < 0.5 ? Direction.ClockWise : Direction.CounterClockwise;
-    const randomStartPosition = Math.floor(Math.random() * 7);
+    const randomStartPosition = Math.floor(Math.random() * (N_LETTERS - 1));
 
     const newPuzzle = scrambleWord(
       randomDirection,

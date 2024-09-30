@@ -46,11 +46,11 @@ export function MenuBar(props: IMenuBarProps) {
       <List>
         {props.menuItems.map((item: IMenuItem) => (
           <ListItem key={item.title} disablePadding>
-            <ListItemButton sx={{ textAlign: "center" }}>
-              <ListItemText primary={item.title}>
-                <Link to={item.navigation} />
-              </ListItemText>
-            </ListItemButton>
+            <Button key={item.title} sx={{ color: "#fff" }}>
+              <Link to={item.navigation} style={{ textDecoration: "none" }}>
+                {item.title}
+              </Link>
+            </Button>
           </ListItem>
         ))}
       </List>
@@ -77,11 +77,18 @@ export function MenuBar(props: IMenuBarProps) {
           <Typography
             variant="h6"
             component="div"
-            sx={{ flexGrow: 1, display: { xs: "none", sm: "block" } }}
+            sx={{
+              flexGrow: 1,
+              display: { xs: "none", sm: "block" },
+            }}
           >
             {props.title}
           </Typography>
-          <Box sx={{ display: { xs: "none", sm: "block" } }}>
+          <Box
+            sx={{
+              display: { xs: "none", sm: "block" },
+            }}
+          >
             {props.menuItems.map((item) => (
               <Button key={item.title} sx={{ color: "#fff" }}>
                 <Link to={item.navigation} style={{ textDecoration: "none" }}>

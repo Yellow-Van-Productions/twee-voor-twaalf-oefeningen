@@ -216,6 +216,15 @@ export default function TwaalfLetterWoord() {
       const fileContents = await fetch("twaalfletterwoorden.csv");
       const words = await fileContents.text();
       const listOfWords = words.split("\r\n");
+
+      // verify contents:
+      for (const word of listOfWords) {
+        if (word.length !== N_LETTERS) {
+          console.log("Error, word of incorrect length: " + word);
+          return;
+        }
+      }
+
       setTwelveLetterWordDatabase(listOfWords);
     };
 
