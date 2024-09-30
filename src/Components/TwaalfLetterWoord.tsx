@@ -282,7 +282,7 @@ export default function TwaalfLetterWoord() {
   const checkAnswer = () => {
     if (answerTextFieldRef && answerTextFieldRef.current && puzzle) {
       setIsAnswerCorrect(
-        answerTextFieldRef.current.value.toLowerCase() ===
+        answerTextFieldRef.current.value.toLowerCase().trim() ===
           puzzle.word.toLowerCase().trim()
       );
     } else {
