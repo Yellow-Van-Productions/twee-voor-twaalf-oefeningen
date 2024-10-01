@@ -1,15 +1,15 @@
 {
   "files": {
-    "main.css": "/twee-voor-twaalf-oefeningen/static/css/main.05c328e5.css",
-    "main.js": "/twee-voor-twaalf-oefeningen/static/js/main.d818b52a.js",
+    "main.css": "/twee-voor-twaalf-oefeningen/static/css/main.4f1a33e8.css",
+    "main.js": "/twee-voor-twaalf-oefeningen/static/js/main.dfba9ef5.js",
     "static/js/453.cee373e1.chunk.js": "/twee-voor-twaalf-oefeningen/static/js/453.cee373e1.chunk.js",
     "index.html": "/twee-voor-twaalf-oefeningen/index.html",
-    "main.05c328e5.css.map": "/twee-voor-twaalf-oefeningen/static/css/main.05c328e5.css.map",
-    "main.d818b52a.js.map": "/twee-voor-twaalf-oefeningen/static/js/main.d818b52a.js.map",
+    "main.4f1a33e8.css.map": "/twee-voor-twaalf-oefeningen/static/css/main.4f1a33e8.css.map",
+    "main.dfba9ef5.js.map": "/twee-voor-twaalf-oefeningen/static/js/main.dfba9ef5.js.map",
     "453.cee373e1.chunk.js.map": "/twee-voor-twaalf-oefeningen/static/js/453.cee373e1.chunk.js.map"
   },
   "entrypoints": [
-    "static/css/main.05c328e5.css",
-    "static/js/main.d818b52a.js"
+    "static/css/main.4f1a33e8.css",
+    "static/js/main.dfba9ef5.js"
   ]
 }
