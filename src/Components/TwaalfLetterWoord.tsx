@@ -99,7 +99,6 @@ function newRandomTwaalfLetterPuzzle(
 
 function TwaalfLetterWoordPuzzle(props: ITwaalfLetterWoordPuzzleProps) {
   const isNarrowScreen = useMediaQuery({ query: "(max-width: 950px)" });
-  console.log(isNarrowScreen);
 
   useEffect(() => {
     setCurrentGameState(props.puzzle.letterArray);
@@ -160,7 +159,7 @@ function TwaalfLetterWoordPuzzle(props: ITwaalfLetterWoordPuzzleProps) {
                         props.onBuyingLetter();
                       }}
                     >
-                      <Typography variant={isNarrowScreen ? "h5" : "h3"}>
+                      <Typography variant={isNarrowScreen ? "h6" : "h3"}>
                         {letter.hidden || letter.checked ? "" : letter.letter}
                       </Typography>
                     </button>
@@ -194,7 +193,7 @@ function TwaalfLetterWoordPuzzle(props: ITwaalfLetterWoordPuzzleProps) {
                         isNarrowScreen ? "small" : "large"
                       }`}
                     >
-                      <Typography variant={isNarrowScreen ? "h5" : "h3"}>
+                      <Typography variant={isNarrowScreen ? "h6" : "h3"}>
                         {letter.checked ? letter.letter : "."}
                       </Typography>
                     </button>

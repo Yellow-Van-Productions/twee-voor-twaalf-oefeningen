@@ -55,24 +55,25 @@
 /* SMALL */
 
 .tile-small {
-  width: 35px;
-  height: 50px;
+  width: 30px;
+  height: 45px;
 
-  padding: 4px;
+  padding: 0px;
+  margin: 0px;
 }
 
 .tile-content-small {
-  width: 30px;
-  height: 50px;
+  width: 25px;
+  height: 45px;
   
-  border: 2px solid rgb(37, 16, 1);
+  border: 1px solid rgb(37, 16, 1);
   box-sizing: border-box;
   justify-content: center;
   align-items: center;
   text-align: center;
   border-radius: 3px;
-  margin: 1px;
-
+  margin: 0px;
+  padding: 0px;
 
   &.active {
     cursor: pointer;
