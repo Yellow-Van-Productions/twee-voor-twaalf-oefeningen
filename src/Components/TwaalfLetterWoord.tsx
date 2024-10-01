@@ -1,4 +1,10 @@
-import React, { useCallback, useEffect, useRef, useState } from "react";
+import React, {
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
 
 import Grid from "@mui/material/Grid2";
 import {
@@ -95,10 +101,23 @@ function TwaalfLetterWoordPuzzle(props: ITwaalfLetterWoordPuzzleProps) {
   const isNarrowScreen = useMediaQuery({ query: "(max-width: 950px)" });
   console.log(isNarrowScreen);
 
-  const [currentGameState, setCurrentGameState] = useState<RaadLetter[]>([]);
   useEffect(() => {
     setCurrentGameState(props.puzzle.letterArray);
   }, [props.puzzle]);
+
+  const [currentGameState, setCurrentGameState] = useState<RaadLetter[]>([]);
+
+  const sortedCurrentGameState = useMemo(() => {
+    const sortedCurrentGameState = currentGameState.slice();
+    sortedCurrentGameState.sort((a: RaadLetter, b: RaadLetter) => {
+      return a.riddleIndex < b.riddleIndex
+        ? -1
+        : a.riddleIndex > b.riddleIndex
+        ? 1
+        : 0;
+    });
+    return sortedCurrentGameState;
+  }, [currentGameState]);
 
   return (
     <Grid container spacing={1}>
@@ -110,53 +129,44 @@ function TwaalfLetterWoordPuzzle(props: ITwaalfLetterWoordPuzzleProps) {
         >
           <TableBody>
             <TableRow>
-              {currentGameState
-                // @ts-ignore: toSorted does not exist yet?
-                .toSorted((a: RaadLetter, b: RaadLetter) => {
-                  return a.riddleIndex < b.riddleIndex
-                    ? -1
-                    : a.riddleIndex > b.riddleIndex
-                    ? 1
-                    : 0;
-                })
-                .map((letter: RaadLetter) => {
-                  return (
-                    <TableCell
-                      className={`tile-${isNarrowScreen ? "small" : "large"}`}
-                      key={uuidv4()}
-                      sx={{
-                        borderBottom: "0px",
-                        padding: "2px",
+              {sortedCurrentGameState.map((letter: RaadLetter) => {
+                return (
+                  <TableCell
+                    className={`tile-${isNarrowScreen ? "small" : "large"}`}
+                    key={uuidv4()}
+                    sx={{
+                      borderBottom: "0px",
+                      padding: "2px",
+                    }}
+                  >
+                    <button
+                      className={`tile-content-${
+                        isNarrowScreen ? "small" : "large"
+                      } active`}
+                      onClick={() => {
+                        if (letter.hidden || letter.checked) {
+                          return;
+                        }
+                        setCurrentGameState(
+                          currentGameState.map((oldLetter) => {
+                            return oldLetter === letter
+                              ? {
+                                  ...letter,
+                                  checked: true,
+                                }
+                              : oldLetter;
+                          })
+                        );
+                        props.onBuyingLetter();
                       }}
                     >
-                      <button
-                        className={`tile-content-${
-                          isNarrowScreen ? "small" : "large"
-                        } active`}
-                        onClick={() => {
-                          if (letter.hidden || letter.checked) {
-                            return;
-                          }
-                          setCurrentGameState(
-                            currentGameState.map((oldLetter) => {
-                              return oldLetter === letter
-                                ? {
-                                    ...letter,
-                                    checked: true,
-                                  }
-                                : oldLetter;
-                            })
-                          );
-                          props.onBuyingLetter();
-                        }}
-                      >
-                        <Typography variant={isNarrowScreen ? "h5" : "h3"}>
-                          {letter.hidden || letter.checked ? "" : letter.letter}
-                        </Typography>
-                      </button>
-                    </TableCell>
-                  );
-                })}
+                      <Typography variant={isNarrowScreen ? "h5" : "h3"}>
+                        {letter.hidden || letter.checked ? "" : letter.letter}
+                      </Typography>
+                    </button>
+                  </TableCell>
+                );
+              })}
             </TableRow>
           </TableBody>
         </Table>
