@@ -17,14 +17,14 @@
 
 }
 
-.tile {
+.tile-large {
   width: 70px;
   height: 90px;
 
   padding: 4px;
 }
 
-.tile-content {
+.tile-content-large {
   width: 60px;
   height: 80px;
   
@@ -43,6 +43,6 @@
 
 }
 
-.tile-content:hover {
+.tile-content-large:hover {
   background-color: rgb(229, 225, 255);
 }

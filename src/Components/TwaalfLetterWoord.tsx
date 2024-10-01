@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 
 import Grid from "@mui/material/Grid2";
 import {
@@ -19,6 +19,7 @@ import CheckIcon from "@mui/icons-material/Check";
 import CloseIcon from "@mui/icons-material/Close";
 
 import { Char, toChar } from "../common/Character";
+import { useMediaQuery } from "react-responsive";
 
 const N_LETTERS = 12;
 
@@ -89,12 +90,86 @@ function newRandomTwaalfLetterPuzzle(
   };
 }
 
+interface ICountDownProps {
+  timeOutTimeSeconds: number;
+  isPaused: boolean;
+
+  onTimedOut?: () => void;
+}
+
+function CountDown(props: ICountDownProps) {
+  const [timeSeconds, seTimerSeconds] = useState<number>(
+    props.timeOutTimeSeconds
+  );
+  const [hasEnded, setHasEnded] = useState<boolean>(false);
+
+  const { onTimedOut, isPaused } = { ...props };
+
+  useEffect(() => {
+    seTimerSeconds(props.timeOutTimeSeconds);
+  }, [props.timeOutTimeSeconds]);
+
+  useEffect(() => {
+    if (hasEnded && onTimedOut) {
+      onTimedOut();
+    }
+  }, [hasEnded, onTimedOut]);
+
+  useEffect(() => {
+    let timerInterval = setInterval(() => {
+      seTimerSeconds((previousTime: number) => {
+        if (previousTime === 0) {
+          clearInterval(timerInterval);
+
+          setHasEnded(true);
+          return 0;
+        } else {
+          return previousTime - 1;
+        }
+      });
+    }, 100);
+
+    if (isPaused) {
+      clearInterval(timerInterval);
+    }
+
+    // Cleanup the interval when the component unmounts
+    return () => clearInterval(timerInterval);
+  }, [isPaused]);
+
+  return (
+    <Grid container direction="row" alignItems="center" spacing={1}>
+      <Typography
+        variant="h5"
+        sx={{
+          fontWeight: "bold",
+        }}
+      >
+        Time:
+      </Typography>
+      <Typography variant="h5">{`${Math.floor(timeSeconds / 60)}:${
+        timeSeconds % 60 < 10 ? "0" : ""
+      }${timeSeconds % 60}`}</Typography>
+    </Grid>
+  );
+}
+
 function TwaalfLetterWoordPuzzle(props: ITwaalfLetterWoordPuzzleProps) {
+  const isDesktopOrLaptop = useMediaQuery({
+    query: "(min-width: 1224px)",
+  });
+  const isBigScreen = useMediaQuery({ query: "(min-width: 1824px)" });
+  const isTabletOrMobile = useMediaQuery({ query: "(max-width: 1224px)" });
+  const isPortrait = useMediaQuery({ query: "(orientation: portrait)" });
+  const isRetina = useMediaQuery({ query: "(min-resolution: 2dppx)" });
+
   const [currentGameState, setCurrentGameState] = useState<RaadLetter[]>([]);
 
   useEffect(() => {
     setCurrentGameState(props.puzzle.letterArray);
   }, [props.puzzle]);
+
+  console.log(isBigScreen, isTabletOrMobile);
 
   return (
     <Grid container spacing={1}>
@@ -118,7 +193,7 @@ function TwaalfLetterWoordPuzzle(props: ITwaalfLetterWoordPuzzleProps) {
                 .map((letter: RaadLetter) => {
                   return (
                     <TableCell
-                      className="tile"
+                      className="tile-large"
                       key={uuidv4()}
                       sx={{
                         borderBottom: "0px",
@@ -126,7 +201,7 @@ function TwaalfLetterWoordPuzzle(props: ITwaalfLetterWoordPuzzleProps) {
                       }}
                     >
                       <button
-                        className="tile-content active"
+                        className="tile-content-large active"
                         onClick={() => {
                           if (letter.hidden || letter.checked) {
                             return;
@@ -167,13 +242,13 @@ function TwaalfLetterWoordPuzzle(props: ITwaalfLetterWoordPuzzleProps) {
                 return (
                   <TableCell
                     key={uuidv4()}
-                    className="tile"
+                    className="tile-large"
                     sx={{
                       borderBottom: "0px",
                       padding: "2px",
                     }}
                   >
-                    <button className="tile-content">
+                    <button className="tile-content-large">
                       <Typography variant="h3">
                         {letter.checked ? letter.letter : "."}
                       </Typography>
@@ -200,8 +275,6 @@ export default function TwaalfLetterWoord() {
   const [puzzle, setPuzzle] = useState<ITwaalfLetterWoordPuzzle | null>(null);
   const [isAnswerCorrect, setIsAnswerCorrect] = useState<boolean | null>(null);
   const answerTextFieldRef = useRef<any>();
-  const [gameTimeSeconds, setGameTimerSeconds] =
-    useState<number>(PUZZLE_TIME_OUT);
   const [euroScore, setEuroScore] = useState<number>(START_EURO_SCORE);
   const [bekendeLetters, setBekendeLetters] = useState<number>(N_LETTERS);
 
@@ -235,27 +308,6 @@ export default function TwaalfLetterWoord() {
     generateNewPuzzle(twelveLetterWordDatabase, bekendeLetters);
   }, [twelveLetterWordDatabase, bekendeLetters]);
 
-  useEffect(() => {
-    let timerInterval = setInterval(() => {
-      setGameTimerSeconds((previousTime: number) => {
-        if (previousTime === 0) {
-          clearInterval(timerInterval);
-          setIsAnswerCorrect(false);
-          return 0;
-        } else {
-          return previousTime - 1;
-        }
-      });
-    }, 1000);
-
-    if (isAnswerCorrect) {
-      clearInterval(timerInterval);
-    }
-
-    // Cleanup the interval when the component unmounts
-    return () => clearInterval(timerInterval);
-  }, [isAnswerCorrect]);
-
   const generateNewPuzzle = (
     listOfWords: string[] | null,
     bekendeLetters: number
@@ -276,8 +328,11 @@ export default function TwaalfLetterWoord() {
     setIsAnswerCorrect(null);
     setPuzzle(newPuzzle);
     setEuroScore(START_EURO_SCORE);
-    setGameTimerSeconds(PUZZLE_TIME_OUT);
   };
+
+  const onTimerTimerOut = useCallback(() => {
+    setIsAnswerCorrect(false);
+  }, []);
 
   const checkAnswer = () => {
     if (answerTextFieldRef && answerTextFieldRef.current && puzzle) {
@@ -338,21 +393,12 @@ export default function TwaalfLetterWoord() {
           textAlign: "center",
         }}
       >
-        <Grid container direction="row" alignItems="center" spacing={1}>
-          <Typography
-            variant="h5"
-            sx={{
-              fontWeight: "bold",
-            }}
-          >
-            Time:
-          </Typography>
-          <Typography variant="h5">{`${Math.floor(gameTimeSeconds / 60)}:${
-            gameTimeSeconds % 60 < 10 ? "0" : ""
-          }${gameTimeSeconds % 60}`}</Typography>
-        </Grid>
+        <CountDown
+          timeOutTimeSeconds={PUZZLE_TIME_OUT}
+          onTimedOut={onTimerTimerOut}
+          isPaused={isAnswerCorrect !== null}
+        />
       </Grid>
-
       <Grid
         sx={{
           textAlign: "center",
