@@ -59,7 +59,7 @@ export default function CounterComponent(props: ICountDownProps) {
           }
         }
       });
-    }, 100);
+    }, 1000);
 
     if (isPaused) {
       clearInterval(timerInterval);

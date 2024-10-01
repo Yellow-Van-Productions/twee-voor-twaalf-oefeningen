@@ -161,7 +161,6 @@ export default function Paardensprong() {
 
     setIsAnswerCorrect(null);
     setPuzzle(newPuzzle);
-    // setTimerSeconds(0);
   };
 
   const checkAnswer = () => {

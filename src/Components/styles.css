@@ -17,6 +17,12 @@
 
 }
 
+/* LARGE */
+
+.tile-font-large {
+
+}
+
 .tile-large {
   width: 70px;
   height: 90px;
@@ -40,9 +46,39 @@
   &.active {
     cursor: pointer;
   }
-
 }
 
 .tile-content-large:hover {
+  background-color: rgb(229, 225, 255);
+}
+
+/* SMALL */
+
+.tile-small {
+  width: 35px;
+  height: 50px;
+
+  padding: 4px;
+}
+
+.tile-content-small {
+  width: 30px;
+  height: 50px;
+  
+  border: 2px solid rgb(37, 16, 1);
+  box-sizing: border-box;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  border-radius: 3px;
+  margin: 1px;
+
+
+  &.active {
+    cursor: pointer;
+  }
+}
+
+.tile-content-small:hover {
   background-color: rgb(229, 225, 255);
 }

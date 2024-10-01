@@ -20,6 +20,7 @@ import CloseIcon from "@mui/icons-material/Close";
 
 import { Char, toChar } from "../common/Character";
 import CounterComponent, { CountingDirectiong } from "./CounterComponent";
+import { useMediaQuery } from "react-responsive";
 
 const N_LETTERS = 12;
 
@@ -91,6 +92,9 @@ function newRandomTwaalfLetterPuzzle(
 }
 
 function TwaalfLetterWoordPuzzle(props: ITwaalfLetterWoordPuzzleProps) {
+  const isNarrowScreen = useMediaQuery({ query: "(max-width: 950px)" });
+  console.log(isNarrowScreen);
+
   const [currentGameState, setCurrentGameState] = useState<RaadLetter[]>([]);
   useEffect(() => {
     setCurrentGameState(props.puzzle.letterArray);
@@ -118,7 +122,7 @@ function TwaalfLetterWoordPuzzle(props: ITwaalfLetterWoordPuzzleProps) {
                 .map((letter: RaadLetter) => {
                   return (
                     <TableCell
-                      className="tile-large"
+                      className={`tile-${isNarrowScreen ? "small" : "large"}`}
                       key={uuidv4()}
                       sx={{
                         borderBottom: "0px",
@@ -126,7 +130,9 @@ function TwaalfLetterWoordPuzzle(props: ITwaalfLetterWoordPuzzleProps) {
                       }}
                     >
                       <button
-                        className="tile-content-large active"
+                        className={`tile-content-${
+                          isNarrowScreen ? "small" : "large"
+                        } active`}
                         onClick={() => {
                           if (letter.hidden || letter.checked) {
                             return;
@@ -144,7 +150,7 @@ function TwaalfLetterWoordPuzzle(props: ITwaalfLetterWoordPuzzleProps) {
                           props.onBuyingLetter();
                         }}
                       >
-                        <Typography variant="h3">
+                        <Typography variant={isNarrowScreen ? "h5" : "h3"}>
                           {letter.hidden || letter.checked ? "" : letter.letter}
                         </Typography>
                       </button>
@@ -167,14 +173,18 @@ function TwaalfLetterWoordPuzzle(props: ITwaalfLetterWoordPuzzleProps) {
                 return (
                   <TableCell
                     key={uuidv4()}
-                    className="tile-large"
+                    className={`tile-${isNarrowScreen ? "small" : "large"}`}
                     sx={{
                       borderBottom: "0px",
                       padding: "2px",
                     }}
                   >
-                    <button className="tile-content-large">
-                      <Typography variant="h3">
+                    <button
+                      className={`tile-content-${
+                        isNarrowScreen ? "small" : "large"
+                      }`}
+                    >
+                      <Typography variant={isNarrowScreen ? "h5" : "h3"}>
                         {letter.checked ? letter.letter : "."}
                       </Typography>
                     </button>
