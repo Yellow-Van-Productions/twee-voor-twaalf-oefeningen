@@ -19,7 +19,7 @@ import CheckIcon from "@mui/icons-material/Check";
 import CloseIcon from "@mui/icons-material/Close";
 
 import { Char, toChar } from "../common/Character";
-import { useMediaQuery } from "react-responsive";
+import CounterComponent, { CountingDirectiong } from "./CounterComponent";
 
 const N_LETTERS = 12;
 
@@ -90,86 +90,11 @@ function newRandomTwaalfLetterPuzzle(
   };
 }
 
-interface ICountDownProps {
-  timeOutTimeSeconds: number;
-  isPaused: boolean;
-
-  onTimedOut?: () => void;
-}
-
-function CountDown(props: ICountDownProps) {
-  const [timeSeconds, seTimerSeconds] = useState<number>(
-    props.timeOutTimeSeconds
-  );
-  const [hasEnded, setHasEnded] = useState<boolean>(false);
-
-  const { onTimedOut, isPaused } = { ...props };
-
-  useEffect(() => {
-    seTimerSeconds(props.timeOutTimeSeconds);
-  }, [props.timeOutTimeSeconds]);
-
-  useEffect(() => {
-    if (hasEnded && onTimedOut) {
-      onTimedOut();
-    }
-  }, [hasEnded, onTimedOut]);
-
-  useEffect(() => {
-    let timerInterval = setInterval(() => {
-      seTimerSeconds((previousTime: number) => {
-        if (previousTime === 0) {
-          clearInterval(timerInterval);
-
-          setHasEnded(true);
-          return 0;
-        } else {
-          return previousTime - 1;
-        }
-      });
-    }, 100);
-
-    if (isPaused) {
-      clearInterval(timerInterval);
-    }
-
-    // Cleanup the interval when the component unmounts
-    return () => clearInterval(timerInterval);
-  }, [isPaused]);
-
-  return (
-    <Grid container direction="row" alignItems="center" spacing={1}>
-      <Typography
-        variant="h5"
-        sx={{
-          fontWeight: "bold",
-        }}
-      >
-        Time:
-      </Typography>
-      <Typography variant="h5">{`${Math.floor(timeSeconds / 60)}:${
-        timeSeconds % 60 < 10 ? "0" : ""
-      }${timeSeconds % 60}`}</Typography>
-    </Grid>
-  );
-}
-
 function TwaalfLetterWoordPuzzle(props: ITwaalfLetterWoordPuzzleProps) {
-  const isDesktopOrLaptop = useMediaQuery({
-    query: "(min-width: 1224px)",
-  });
-  const isBigScreen = useMediaQuery({ query: "(min-width: 1824px)" });
-  const isTabletOrMobile = useMediaQuery({ query: "(max-width: 1224px)" });
-  const isPortrait = useMediaQuery({ query: "(orientation: portrait)" });
-  const isRetina = useMediaQuery({ query: "(min-resolution: 2dppx)" });
-
   const [currentGameState, setCurrentGameState] = useState<RaadLetter[]>([]);
-
   useEffect(() => {
     setCurrentGameState(props.puzzle.letterArray);
   }, [props.puzzle]);
-
-  console.log(isBigScreen, isTabletOrMobile);
 
   return (
     <Grid container spacing={1}>
@@ -393,10 +318,11 @@ export default function TwaalfLetterWoord() {
           textAlign: "center",
         }}
       >
-        <CountDown
+        <CounterComponent
           timeOutTimeSeconds={PUZZLE_TIME_OUT}
           onTimedOut={onTimerTimerOut}
           isPaused={isAnswerCorrect !== null}
+          countingDirection={CountingDirectiong.Down}
         />
       </Grid>
       <Grid

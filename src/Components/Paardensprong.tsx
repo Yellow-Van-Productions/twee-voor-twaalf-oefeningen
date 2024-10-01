@@ -13,6 +13,7 @@ import CheckIcon from "@mui/icons-material/Check";
 import CloseIcon from "@mui/icons-material/Close";
 
 import { Char, toChar } from "../common/Character";
+import CounterComponent, { CountingDirectiong } from "./CounterComponent";
 
 const N_LETTERS = 8;
 
@@ -113,7 +114,6 @@ export default function Paardensprong() {
   const [puzzle, setPuzzle] = useState<IPaardenSprongPuzzle | null>(null);
   const [isAnswerCorrect, setIsAnswerCorrect] = useState<boolean | null>(null);
   const answerTextFieldRef = useRef<any>();
-  const [timerTimeSeconds, setTimerSeconds] = useState<number>(0);
 
   useEffect(() => {
     const loadDatabaseAsync = async () => {
@@ -138,21 +138,6 @@ export default function Paardensprong() {
     generateNewWord(eightLetterWordDatabase);
   }, [eightLetterWordDatabase]);
 
-  useEffect(() => {
-    const timerInterval = setInterval(() => {
-      setTimerSeconds((prevTime: number) => {
-        return prevTime + 1;
-      });
-    }, 1000);
-
-    if (isAnswerCorrect) {
-      clearInterval(timerInterval);
-    }
-
-    // Cleanup the interval when the component unmounts
-    return () => clearInterval(timerInterval);
-  }, [isAnswerCorrect]);
-
   const generateNewWord = (listOfWords: string[] | null) => {
     if (!listOfWords || listOfWords.length === 0) {
       return;
@@ -176,7 +161,7 @@ export default function Paardensprong() {
 
     setIsAnswerCorrect(null);
     setPuzzle(newPuzzle);
-    setTimerSeconds(0);
+    // setTimerSeconds(0);
   };
 
   const checkAnswer = () => {
@@ -211,20 +196,12 @@ export default function Paardensprong() {
       </Grid>
 
       <Grid>
-        <Grid container direction="row" alignItems="center" spacing={1}>
-          <Typography
-            variant="h5"
-            sx={{
-              fontWeight: "bold",
-            }}
-          >
-            Time:
-          </Typography>
-          <Typography variant="h5">{`${Math.floor(timerTimeSeconds / 60)}:${
-            timerTimeSeconds % 60 < 10 ? "0" : ""
-          }${timerTimeSeconds % 60}`}</Typography>
-        </Grid>
+        <CounterComponent
+          countingDirection={CountingDirectiong.Up}
+          isPaused={isAnswerCorrect !== null}
+        />
       </Grid>
+
       <Grid>
         {puzzle ? (
           <PaardensprongTable achtLetterWoord={puzzle.scrambledWord} />
