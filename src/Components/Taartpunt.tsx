@@ -4,6 +4,7 @@ import { Box, Button, CircularProgress, TextField } from "@mui/material";
 import Grid from "@mui/material/Grid2";
 import { useEffect, useRef, useState } from "react";
 import CounterComponent, { CountingDirectiong } from "./CounterComponent";
+import "./Taartpunt.scss";
 
 const N_LETTERS = 9;
 
@@ -20,7 +21,28 @@ interface ITaartPuntPuzzle {
 }
 
 function TaartpuntLayout(props: { puzzle: ITaartPuntPuzzle }) {
-  return <div>{props.puzzle.word}</div>;
+  return (
+    <>
+      <div className="puzzle">
+        <ul className="taart">
+          <li className="punt"></li>
+          <li className="punt"></li>
+          <li className="punt"></li>
+          <li className="punt"></li>
+          <li className="punt"></li>
+          <li className="punt"></li>
+          <li className="punt"></li>
+          <li className="punt"></li>
+          <li className="punt"></li>
+        </ul>
+        <div className="tvt">
+          <h3>2V</h3>
+          <h3>12</h3>
+        </div>
+      </div>
+      <p>{props.puzzle.word}</p>
+    </>
+  );
 }
 
 export default function Taartpunt() {
