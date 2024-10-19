@@ -1,7 +1,7 @@
-import React, { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
-import "./styles.css";
-import Grid from "@mui/material/Grid2";
+import CheckIcon from "@mui/icons-material/Check";
+import CloseIcon from "@mui/icons-material/Close";
 import {
   Box,
   Button,
@@ -9,8 +9,8 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
-import CheckIcon from "@mui/icons-material/Check";
-import CloseIcon from "@mui/icons-material/Close";
+import Grid from "@mui/material/Grid2";
+import "./styles.css";
 
 import { Char, toChar } from "../common/Character";
 import CounterComponent, { CountingDirectiong } from "./CounterComponent";
@@ -119,7 +119,7 @@ export default function Paardensprong() {
     const loadDatabaseAsync = async () => {
       const fileContents = await fetch("achtletterwoorden.csv");
       const words = await fileContents.text();
-      const listOfWords = words.split("\r\n");
+      const listOfWords = words.split("\n").map((w) => w.trim());
 
       for (const word of listOfWords) {
         if (word.length !== N_LETTERS) {

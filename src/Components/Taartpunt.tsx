@@ -65,7 +65,7 @@ export default function Taartpunt() {
     const loadDatabaseAsync = async () => {
       const fileContents = await fetch("negenletterwoorden.csv");
       const words = await fileContents.text();
-      const listOfWords = words.split("\r\n").map((w) => w.trim());
+      const listOfWords = words.split("\n").map((w) => w.trim());
 
       for (const word of listOfWords) {
         if (word.length !== N_LETTERS) {
