@@ -1,6 +1,6 @@
-p {
-  color: white;
-}
+$spaken: 9;
+$width: 24rem;
+$height: 24rem;
 .puzzle {
   background-color: red;
   padding: 1rem;
@@ -30,11 +30,12 @@ p {
 }
 
 .taart {
-  width: 24rem;
-  height: 24rem;
+  width: $width;
+  height: $height;
   border-radius: 50%;
   border: solid white thick;
   position: relative;
+  list-style: none;
 
   .punt {
     position: absolute;
@@ -45,10 +46,45 @@ p {
 
     border-top: white thick solid;
 
-    $spokes: 9;
-    @for $i from 1 through $spokes {
+    @for $i from 1 through $spaken {
       &:nth-of-type(#{$i}) {
         transform: rotate(270 + 40 * $i + deg);
+      }
+    }
+  }
+}
+
+.letters {
+  position: absolute;
+  top: 0;
+  left: 0;
+
+  span {
+    text-transform: capitalize;
+    color: white;
+    font-size: 4rem;
+
+    position: absolute;
+
+    $innerRadius: 0.8;
+    @for $i from 1 through $spaken {
+      &:nth-of-type(#{$i}) {
+        left: calc(
+          $width /
+            2 +
+            $innerRadius *
+            ($width / 2 - 1rem) *
+            cos((($i - 1) / $spaken) * 2 * pi - pi / 2 + 2 * pi / $spaken / 2) -
+            0.5rem
+        );
+        top: calc(
+          $height /
+            2 +
+            $innerRadius *
+            ($height / 2 - 1rem) *
+            sin((($i - 1) / $spaken) * 2 * pi - pi / 2 + 2 * pi / $spaken / 2) -
+            0.5rem
+        );
       }
     }
   }

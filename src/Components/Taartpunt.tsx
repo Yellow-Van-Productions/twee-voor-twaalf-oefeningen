@@ -21,26 +21,34 @@ interface ITaartPuntPuzzle {
 }
 
 function TaartpuntLayout(props: { puzzle: ITaartPuntPuzzle }) {
+  const { word, omittedIndex, startPosition, direction } = props.puzzle;
+  let characters = word.split("");
+  characters.splice(omittedIndex, 1, "?");
+  characters = characters.map((_, i, a) => a[(i + startPosition) % a.length]);
+  if (direction === Direction.CounterClockwise) {
+    characters = characters.reverse();
+  }
+
   return (
     <>
       <div className="puzzle">
         <ul className="taart">
-          <li className="punt"></li>
-          <li className="punt"></li>
-          <li className="punt"></li>
-          <li className="punt"></li>
-          <li className="punt"></li>
-          <li className="punt"></li>
-          <li className="punt"></li>
-          <li className="punt"></li>
-          <li className="punt"></li>
+          {characters.map((_, i) => (
+            <li className="punt" key={i}>
+              {" "}
+            </li>
+          ))}
         </ul>
         <div className="tvt">
           <h3>2V</h3>
           <h3>12</h3>
         </div>
+        <div className="letters">
+          {characters.map((char, i) => (
+            <span key={i}> {char}</span>
+          ))}
+        </div>
       </div>
-      <p>{props.puzzle.word}</p>
     </>
   );
 }
@@ -88,7 +96,7 @@ export default function Taartpunt() {
     const randomStartPosition = Math.floor(Math.random() * (N_LETTERS - 1));
     // Do not take the first or last letter as missing
     const omittedLetterPosition =
-      1 + Math.floor(Math.random() * (listOfWords.length - 2));
+      1 + Math.floor(Math.random() * (randomWord.length - 2));
 
     const newPuzzle: ITaartPuntPuzzle = {
       word: randomWord,
