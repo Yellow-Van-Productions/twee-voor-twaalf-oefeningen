@@ -1,0 +1,111 @@
+$spaken: 9;
+$width: 24rem;
+$height: 24rem;
+$padding: 1rem;
+
+.puzzle {
+  background-color: red;
+  padding: $padding;
+  position: relative;
+
+  .tvt {
+    position: absolute;
+    background-color: red;
+    width: 25%;
+    height: 25%;
+    top: 38%;
+    right: 38%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    border: white thick solid;
+
+    h3 {
+      color: white;
+      margin: 0;
+      line-height: normal;
+      font-size: x-large;
+    }
+  }
+}
+
+.taart {
+  width: $width;
+  height: $height;
+  border-radius: 50%;
+  border: solid white thick;
+  position: relative;
+  list-style: none;
+
+  .punt {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 50%;
+    transform-origin: 0 0;
+
+    border-top: white thick solid;
+
+    @for $i from 1 through $spaken {
+      &:nth-of-type(#{$i}) {
+        transform: rotate(270 + 40 * $i + deg);
+      }
+    }
+  }
+}
+
+.letters {
+  position: absolute;
+  top: 0;
+  left: 0;
+
+  span {
+    text-transform: capitalize;
+    color: white;
+    font-size: 4rem;
+
+    position: absolute;
+
+    $innerRadius: 0.8;
+    $fullTurn: calc(2 * pi);
+    $quarterTurn: $fullTurn / 4;
+    @for $i from 1 through $spaken {
+      &:nth-of-type(#{$i}) {
+        left: calc(
+          $width /
+            2 +
+            $innerRadius *
+            ($width / 2 - 1rem) *
+            cos(
+              (($i - 1) / $spaken) *
+                $fullTurn -
+                $quarterTurn +
+                $fullTurn /
+                $spaken /
+                2
+            ) -
+            $padding /
+            2
+        );
+        top: calc(
+          $height /
+            2 +
+            $innerRadius *
+            ($height / 2 - 1rem) *
+            sin(
+              (($i - 1) / $spaken) *
+                $fullTurn -
+                $quarterTurn +
+                $fullTurn /
+                $spaken /
+                2
+            ) -
+            $padding /
+            2
+        );
+      }
+    }
+  }
+}

@@ -1,12 +1,5 @@
-import React, {
-  useCallback,
-  useEffect,
-  useMemo,
-  useRef,
-  useState,
-} from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 
-import Grid from "@mui/material/Grid2";
 import {
   Autocomplete,
   Box,
@@ -19,14 +12,15 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
+import Grid from "@mui/material/Grid2";
 import { v4 as uuidv4 } from "uuid";
 
 import CheckIcon from "@mui/icons-material/Check";
 import CloseIcon from "@mui/icons-material/Close";
 
+import { useMediaQuery } from "react-responsive";
 import { Char, toChar } from "../common/Character";
 import CounterComponent, { CountingDirectiong } from "./CounterComponent";
-import { useMediaQuery } from "react-responsive";
 
 const N_LETTERS = 12;
 
@@ -232,7 +226,7 @@ export default function TwaalfLetterWoord() {
     const loadDatabaseAsync = async () => {
       const fileContents = await fetch("twaalfletterwoorden.csv");
       const words = await fileContents.text();
-      const listOfWords = words.split("\r\n");
+      const listOfWords = words.split("\n").map((w) => w.trim());
 
       // verify contents:
       for (const word of listOfWords) {
