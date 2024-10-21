@@ -1,9 +1,11 @@
 $spaken: 9;
 $width: 24rem;
 $height: 24rem;
+$padding: 1rem;
+
 .puzzle {
   background-color: red;
-  padding: 1rem;
+  padding: $padding;
   position: relative;
 
   .tvt {
@@ -67,6 +69,8 @@ $height: 24rem;
     position: absolute;
 
     $innerRadius: 0.8;
+    $fullTurn: calc(2 * pi);
+    $quarterTurn: $fullTurn / 4;
     @for $i from 1 through $spaken {
       &:nth-of-type(#{$i}) {
         left: calc(
@@ -74,16 +78,32 @@ $height: 24rem;
             2 +
             $innerRadius *
             ($width / 2 - 1rem) *
-            cos((($i - 1) / $spaken) * 2 * pi - pi / 2 + 2 * pi / $spaken / 2) -
-            0.5rem
+            cos(
+              (($i - 1) / $spaken) *
+                $fullTurn -
+                $quarterTurn +
+                $fullTurn /
+                $spaken /
+                2
+            ) -
+            $padding /
+            2
         );
         top: calc(
           $height /
             2 +
             $innerRadius *
             ($height / 2 - 1rem) *
-            sin((($i - 1) / $spaken) * 2 * pi - pi / 2 + 2 * pi / $spaken / 2) -
-            0.5rem
+            sin(
+              (($i - 1) / $spaken) *
+                $fullTurn -
+                $quarterTurn +
+                $fullTurn /
+                $spaken /
+                2
+            ) -
+            $padding /
+            2
         );
       }
     }
